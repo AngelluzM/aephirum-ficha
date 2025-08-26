@@ -1,0 +1,735 @@
+:root{
+  --bg:#0d1320; --panel:#111a2a; --panel2:#0e1524; --ink:#e9f2ff; --muted:#9fb3ca;
+  --accent:#67c9ff; --line:#1b2a40; --r:18px; --gap:8px;
+
+  /* Tamanhos fixos do gráfico (tela/print) */
+  --radar: 310px;
+  --radar-print: 245px;
+}
+
+
+/* Tabelas */
+table{width:100%;border-collapse:separate;border-spacing:0;}
+thead th{position:sticky;top:0;background:#0d1626;color:#cfe0ff;border-bottom:1px solid #20324a;padding:9px 10px;font-size:12px;text-align:left;}
+tbody td{padding:7px 10px;border-bottom:1px dashed #1a2a42;}
+.small{width:20ch;text-align:center}
+.scroll{max-height:320px;overflow:auto;border:1px solid #162742;border-radius:12px;}
+.tools {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+    justify-content: flex-end;
+}
+/* Radar — tamanho fixo por px (não cresce em resolução, só com zoom) */
+.radar {
+    display: grid;
+    justify-content: center;
+    /* grid-template-columns: var(--radar) 1fr; */
+    gap: 12px;
+    /* align-items: start; */
+    justify-items: center;
+}
+
+.grid_left {
+	gap:8px;
+	/*margin:10px;*/
+
+
+}
+
+.grid_right{
+	/*height:430px;*/
+	
+}
+
+.canvas{
+  width: var(--radar);
+  height: var(--radar);
+  background:#0c1524;
+  border:1px solid #1a2a42;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  margin:0;
+}
+.canvas svg{ width:100%; height:100%; }
+.total{margin-top:8px;font-weight:700;}
+
+.d-none{ display:none !important; }
+
+
+/* Imagem/Mídia *
+.thumb{width:100%;max-width:320px;border-radius:12px;border:1px solid #1c2c43;display:block;}
+/* Grid/preview *
+.object-fit-cover { object-fit: cover; }
+
+/* Dropzone *
+.dropzone { cursor: pointer; transition: border-color .2s, background-color .2s; }
+.dropzone.dragover { border-color: var(--bs-primary); background-color: rgba(13,110,253,.05); }*/
+
+/* Loader */
+.loader { position: absolute; inset: 0; display: grid; place-items: center; }
+.loader::after { content:""; width:42px; height:42px; border-radius:50%;
+  border:3px solid rgba(0,0,0,.15); border-top-color: rgba(0,0,0,.45); animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } ;}
+
+/* Preview “fixo” no desktop */
+
+
+
+/* Esconde input nativo de arquivo, mantendo acessível a leitores de tela */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+/* --- Toggle Arquivo | Link (arruma os rádios) --- */
+
+/* Esconde o input radio visualmente, deixando acessível */
+.btn-group .btn-check{
+  position:absolute !important;
+  width:1px; height:1px;
+  overflow:hidden; clip:rect(0,0,0,0);
+  white-space:nowrap; border:0; padding:0; margin:0;
+}
+
+/* As "pílulas" */
+.btn-group label.btn{
+  display:inline-flex;                 /* NÃO block */
+  align-items:center; justify-content:center;
+  min-width:88px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid #243a58;
+  background:#16253a;
+  color:#d3e7ff;
+  cursor:pointer;
+}
+
+/* Estado ativo (quando o radio estiver checado) */
+.btn-group .btn-check:checked + label.btn{
+  background:linear-gradient(135deg,#67c9ff,#3d95ff);
+  border-color:transparent;
+  color:#061221;
+  box-shadow:0 0 0 2px rgba(103,201,255,.25) inset;
+}
+
+/* Neutraliza regras globais só para esse bloco */
+.btn-group label { display:inline-flex; }                 /* em vez de block */
+.btn-group input[type="radio"] { width:auto; }            /* não 100% */
+
+/* --- alinhamentos gerais --- */
+#bl_ident .row2 { grid-template-columns: repeat(auto-fit, minmax(0,70%)); gap: 8px; }
+
+/* --- MÍDIA: layout lado a lado --- */
+
+
+/* “botões” de rádio estilo toggle (sem Bootstrap) */
+.btn-check{ display:none; }
+.btn.btn-outline-primary{ background:#0b1422; border:1px solid #274b7d; color:#cfe0ff; }
+.btn-check:checked + .btn.btn-outline-primary{
+  background:#1b3355; border-color:#3d6fb1; color:#eaf3ff;
+}
+
+.midia-form input[type="text"]{ width:100%; }
+
+/* Responsivo do bloco Mídia */
+
+/* --- COMPETÊNCIAS & ASPECTOS: inputs compactos (2 dígitos) --- */
+#bl_aspects input[type="number"]{
+  text-align:center; padding:8px 6px; font-size: 14px;
+}
+
+/* grade das competências responsiva (evita bloco desproporcional no celular) */
+.comp-grid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap:8px;
+}
+
+/* --- pequenos polimentos --- */
+#bl_midia h2, #bl_ident h2{ margin-bottom: 8px; }
+#bl_midia .muted { display:block; margin-top:6px; }
+
+/* Label à esquerda, input compacto à direita */
+#bl_comp .row {
+    display: grid;
+    grid-template-columns: auto 64px;
+    align-items: center;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+#bl_comp .row2 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: fit-content;
+    justify-self: center;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+#bl_comp input[type="number"]{
+  width:64px;
+  text-align:center;
+  padding:6px 4px;
+  font-size:14px;
+}
+
+/* ===== Mídia: layout vertical (topo -> entrada -> imagem) ===== */
+#bl_midia .midia-layout-vertical{
+  display: grid;
+  grid-template-rows: auto auto 1fr; /* topo, entrada, preview crescendo */
+  gap: 8px;
+  /*min-height: 420px; /* ajuste se quiser mais/menos altura */
+}
+
+/* Topo: toggle à esquerda, botões à direita (quebra bem no mobile) */
+#bl_midia .midia-top{
+	display: flex;
+	gap: 8px;
+	flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Ações */
+#bl_midia .midia-actions{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Entrada (mostra só um dos blocos) */
+#bl_midia .midia-entry > #wrapFile,
+#bl_midia .midia-entry > #wrapLink{
+  display: grid;
+  gap: 8px;
+}
+
+#bl_midia .midia-entry input[type="text"]{
+  /*width: 10%;*/
+}
+
+/* Prévia ocupa o “resto” da section */
+#bl_midia .midia-preview{
+	justify-self: center;
+}
+#bl_midia .midia-wrap{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #1a2a42;
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    linear-gradient(45deg, rgba(255,255,255,.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.03) 75%),
+    linear-gradient(45deg, rgba(255,255,255,.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.03) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  /*aspect-ratio: 1 / 1;              /* mantém 1:1; posso trocar p/ 4:3 ou 16:9 */
+
+}
+
+#bl_midia .midia-img{
+  /*width: 100%; height: 100%;*/
+  object-fit: cover; /*display: block;*/
+}
+
+/* Botões de alternância (pílulas) — caso já não tenha */
+#bl_midia .btn-group{ display:inline-flex; gap:8px; flex-wrap:wrap; }
+
+#bl_midia .btn-check{ position:absolute !important; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+
+#bl_midia .btn.btn-outline-primary{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:88px; padding:8px 12px; border-radius:999px;
+  border:1px solid #274b7d; background:#0b1422; color:#cfe0ff; cursor:pointer;
+}
+#bl_midia .btn-check:checked + .btn.btn-outline-primary{
+  background:#1b3355; border-color:#3d6fb1; color:#eaf3ff;
+}
+/* === TOPO: Dados + Mídia lado a lado === */
+
+/* ===== APARÊNCIA (Mídia) ===== */
+#bl_midia .block{
+  display:grid;
+  grid-template-rows:auto 1fr auto;   /* topo | preview | ações */
+  gap:16px;
+}
+
+/* Topo: toggle (esq) + entrada (dir) */
+#bl_midia .top{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:12px;
+  align-items:center;
+}
+
+
+/* Entrada (muda entre arquivo e link) */
+#bl_midia .entry{ display:block; }
+#bl_midia .file-btn{
+  width:100%; text-align:left; padding:10px 12px;
+}
+#bl_midia .link-input{
+  width:100%; padding:10px 12px; border:1px solid #1a2a42; border-radius:8px;
+  background:#0c1626; color:#e2f0ff;
+}
+
+/* Prévia grande centralizada */
+#bl_midia .preview{ display:flex; }
+#bl_midia .canvas{
+  position:relative; width:100%; height:100%;
+  min-height:360px; border:1px solid #1a2a42; border-radius:12px; overflow:hidden;
+  background:
+    linear-gradient(45deg, rgba(255,255,255,.035) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.035) 75%),
+    linear-gradient(45deg, rgba(255,255,255,.035) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.035) 75%);
+  background-size:24px 24px; background-position:0 0, 12px 12px;
+}
+
+#bl_midia .placeholder{
+  position:absolute; inset:0; display:grid; place-content:center;
+  text-align:center; font-size:14px; color:#9fb3ce;
+}
+
+/* Ações no rodapé do bloco */
+#bl_midia .actions{
+  display:flex; align-items:center; gap:10px; justify-content:flex-start;
+}
+
+/* Mídia: limites e preview */
+#bl_mid .row{ align-items:start; }
+
+section#bl_caps {
+    height: 120px;
+}
+
+
+/* Responsivo: nada muda — apenas espaçamentos mais confortáveis */
+
+
+/*=============GERAL LAYOUT============*/
+main.wrap {
+    padding: 10px 10px 40px;
+	justify-content: space-around;
+	justify-items: center;
+}
+
+.grid *{
+	
+	max-width: 100%;	
+    align-self: stretch;
+	
+}
+
+.grid2, .grid3, .grid4, .bot_grid {
+	padding: 4px 8px;
+	width: 1060px;
+
+}
+
+div.cap_row { 
+	/*margin-top:12px*/
+    justify-self: center;
+
+}
+
+
+
+
+h3.muted {
+margin: 0 0 6px;
+text-align: center;
+
+}
+
+.top-grid {
+    display: grid;
+    gap: var(--gap);
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    width: 1060px !important;
+	padding: 4px 8px;
+}
+
+/* ==========Header=========== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #0a1220cc;
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+    padding: 10px 30px 10px;
+}
+.wrap{max-width:none;margin:0 auto;/*padding:14px 16px*/}
+.head{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:#16253a;border:1px solid #243a58;color:#d3e7ff;padding:9px 12px;border-radius:10px;cursor:pointer}
+.btn.primary{background:linear-gradient(135deg,var(--accent),#3d95ff);border:0;color:#061221}
+.btn:hover{filter:brightness(1.06)}
+
+/* ==================Geral Layout=================== */
+*{box-sizing:border-box;}
+html,body{max-width: 100%;}
+body{
+  font:16px/1.45 system-ui,Segoe UI,Roboto,Inter,Ubuntu,Arial;
+  background:
+    radial-gradient(900px 600px at -10% -10%,rgba(98,240,192,.08),transparent 55%),
+    radial-gradient(1100px 800px at 120% -20%,rgba(103,201,255,.08),transparent 55%),
+    var(--bg);
+  margin:0;
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 2) BASE / TIPOGRAFIA -------------------------------------- */
+h1{ font-size:32px; letter-spacing:.3px; }
+h2{ font-size:16px; margin:0 0 8px; letter-spacing:.3px; text-align:left;}
+h3{ font-size:14px; margin:0 0 6px; }
+small, .small{ font-size:12px; opacity:.9; }
+
+a{ color: var(--accent); text-decoration: none; }
+a:hover{ text-decoration: underline; }
+
+/* Form padrão */
+div {
+	display:grid;
+}
+.grid{
+	display:grid;gap:var(--gap);
+	grid-template-columns: 430px 610px;
+	padding:4px 8px;
+	justify-content: center;
+}
+
+.card{
+	background:linear-gradient(180deg,var(--panel),var(--panel2));
+	border:1px solid var(--line);
+	border-radius:var(--r);
+	padding:10px;
+	/*margin-top:8px;*/
+	height: -webkit-fill-available;
+	
+	border:1px dashed #1a2a42;
+}
+	
+	section#bl_aspects {
+    height: 470px;
+
+}
+
+div #previewImage{
+	max-width: 350px !important;
+}
+
+label{display:block;font-size:12px;color:#c9d9f1;/*margin:6px 0 4px;*/}
+input, select, textarea{background:#0b1422;border:1px solid #1c2c43;border-radius:12px;color:var(--ink);padding:10px 12px;outline:none; width:100%;}
+input[type=number]{appearance:textfield; width:8ch;}
+textarea{min-height:120px;width:100%;resize:vertical;}
+.row {
+    display: grid;
+    /* gap: 12px; */
+    grid-template-columns: repeat(1,1fr);
+    justify-content: start;
+    justify-items: start;
+}
+/*.row2{grid-template-columns:repeat(2,1fr);}*/
+
+.cap_row{
+	display:grid;
+	grid-template-columns:
+	repeat(5,1fr);
+}
+
+	
+.cap_row div {
+    text-align: left;
+    margin-right: 5px;
+}	
+	
+.muted{
+	color:var(--muted);
+	font-size:12px;
+}
+
+#idl1 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#idl2 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#idl3 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#div_nome{
+		width:80ch;
+}
+
+#div_idade{
+		width:8ch;
+}
+
+#div_raca{
+		width:45ch;
+}
+
+#div_doutrina{
+		width:38ch;
+}
+
+#div_afinidade{
+		width:15ch;
+}
+
+#div_aversao{
+		width:15ch;
+}
+
+#div_origem{
+		width:45ch;
+}
+
+#div_essencia{
+		width:35ch;
+}
+
+#div_macula{
+		width:14ch;
+}
+
+#div_expiacao{
+		width:20ch;
+}
+
+  #bl_midia .canvas{ min-height:220px; }
+  #bl_midia .placeholder{ display:none !important; } /* some no PDF quando a imagem existe */
+
+div#idl1 {
+    display: grid; 
+    grid-template-columns: auto auto auto;
+	width:1020px;
+	justify-content: space-between;
+}
+
+div#idl2 {
+    display: grid; 
+    grid-template-columns: auto auto auto;
+	width:1020px;
+	justify-content: space-between;
+}
+
+div#idl3 {
+    display: grid;
+    grid-template-columns: repeat(4, 150px);
+    gap: 8px;
+    width: 1020px;
+    /* justify-content: space-between; */
+}
+	  .alist {
+    display: grid;
+    grid-template-columns: repeat(6, auto) !important;
+	gap:8px;
+	justify-self: center;
+}
+
+
+/* ======= largura 980px ======== *
+@media (max-width: 980px){
+  .top-grid{ grid-template-columns: 1fr; }
+  .comp-grid{ grid-template-columns: repeat(2, 1fr); }
+  .midia-layout-vertical{ grid-template-columns: 1fr; }
+  .midia-preview .midia-wrap{ max-height: 320px; }
+  .grid{grid-template-columns:1fr}
+  .radar{ grid-template-columns:1fr }
+  #bl_ident .row2 { grid-template-columns: 1fr 1fr; }
+
+}*/
+
+/* ======= largura 768px ======== *
+@media (min-width: 768px) {
+  .sticky-md { position: sticky; top: 10px; }
+}*/
+
+/* ======= largura 720px ======== *
+@media (max-width: 720px){
+  #bl_midia .top{ grid-template-columns:1fr; gap:8px; }
+}
+
+/* ======= largura 640px ======== *
+
+@media (max-width: 640px){
+  #bl_midia .midia-actions{ justify-content:flex-start; }
+  .comp-grid{ grid-template-columns: 1fr; }
+  #bl_ident .row2 { grid-template-columns: 1fr; }
+  
+}
+*/
+@media (max-width: 1080px ) {
+	body {width:1060px !important;}
+	.header{width:1060px!important;}
+	
+  
+  .top-grid {
+    display: grid;
+    gap: var(--gap);
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    width: 1060px !important;
+	padding: 8px;
+  }
+  
+  .row {
+    display: grid;
+    /* gap: 12px; */
+    grid-template-columns: repeat(1,1fr);
+    justify-content: start;
+    justify-items: start;
+}
+  .row2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  /*row-gap: .75rem;
+  column-gap: 1rem;
+  align-items: center; /* label e input alinhados verticalmente */
+}
+
+/* cada linha (div) deixa o label numa célula e o input em outra */
+
+
+/* ajustes */
+.row2 label {
+  text-align: left;
+  white-space: wrap; /* impede quebra no label */
+}
+
+.row2 input {
+  width: 100%;          /* ocupa o espaço disponível */
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Se precisar de inputs menores em alguns casos */
+.ic { width: 12ch; }
+.im { width: 24ch; }
+.il { width: 40ch; }
+
+/* 1) Container dos campos: linhas que quebram automaticamente */
+.top-grid #bl_ident .row2{
+  display: grid;
+  flex-wrap: wrap;        /* permite quebrar para a próxima linha */
+  gap: 8px 12px;          /* espaçamento vertical/horizontal entre campos */
+  align-items: flex-start;/* evita “esticarem” por altura inesperada */
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+/* 2) Cada par (label + input/select) funciona como um "bloco" autônomo */
+/*.top-grid #bl_ident .row2 > div{
+  display: inline-flex;   /* label à esquerda, campo à direita, na mesma linha *
+  align-items: center;    /* alinha verticalmente label e controle *
+  gap: 8px;               /* espaço entre label e input/select *
+  flex: 0 1 auto;         /* ocupa apenas o necessário; permite quebra de linha *
+  min-width: max-content; /* garante que label+campo não quebrem entre si *
+  height: var(--field-h, 40px); /* altura padrão do bloco *
+  box-sizing: border-box;
+  max-width: 100%;
+}*/
+
+/* 3) Inputs e selects: mesma altura do bloco, sem estourar */
+.top-grid #bl_ident .row2 input,
+.top-grid #bl_ident .row2 select{
+  height: var(--field-h, 40px);            /* mesma altura em tudo */
+  padding: 0 .6rem;                        /* conforto lateral */
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+
+
+}
+
+/* =======  PRINT =========*/
+@media print{
+
+  /* Fundo limpo e economiza tinta */
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Esconde controles de app/ação */
+  header, .actions, .tools, #btnInstall { display: none !important; }
+
+  /* Usa a largura total imprimível */
+  .wrap { max-width: none !important; padding: 0 !important; }
+
+  /* Tira sticky no print */
+  .sticky-md { position: static !important; top: auto !important; }
+
+  /* Evita quebra de cards entre páginas */
+  #bl_caps, #bl_aspects, #bl_ident, #bl_comp, #bl_ref, #bl_eq, #bl_midia, #bl_notes {
+    break-inside: avoid; page-break-inside: avoid;
+  }
+
+  /* Radar menor para caber lado a lado */
+  :root { --radar-print: 170px; }
+  .radar { grid-template-columns: var(--radar-print) 1fr !important; }
+  .canvas { width: var(--radar-print) !important; height: var(--radar-print) !important; }
+
+  /* Tabelas mais compactas */
+  thead th { padding: 7px 8px !important; font-size: 11px !important; }
+  tbody td { padding: 6px 8px !important; }
+
+  /* ===== Layout de impressão =====
+     Como o #bl_ident está fora da .grid no HTML,
+     imprimimos assim:
+       1) Identificação em largura total
+       2) Linha com: (Capacidades + Aspectos) | (Aparência)
+  */
+
+  /* 1) Identificação ocupa largura total */
+  .top-grid { grid-template-columns: 1fr !important; } /* corrigindo o seletor (não .top_grip) */
+
+  /* 2) Linha abaixo com 2 colunas simétricas */
+  .grid { grid-template-columns: 430px 610px !important; gap: 8px !important; max-height:470px !important;
+    display: grid;
+    height: 435px;
+    justify-content: center;
+}
+
+  /* Aparência: preview visível e área adequada no papel */
+  /*#bl_midia .midia-layout-vertical { grid-template-rows: auto auto minmax(220px, 1fr) !important; }*/
+  #bl_midia .midia-preview { min-height: 220px !important; /*height:100% !important;*/}
+  div.midia-top, div.midia-entry, div.midia-actions {display:none !important;}
+  /*section#bl_midia.card {height: -webkit-fill-available;}*/
+  .alist {
+    display: grid;
+    grid-template-columns: repeat(6, auto) !important;
+	gap:8px;
+	justify-self: center;
+}
+.total {
+    display: none;
+}
+}/* final dos comandos para versão print*/
+  
