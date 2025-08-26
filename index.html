@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Aephirum RPG — Ficha (PWA)</title>
+
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#0d1320" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body align="center">
+<header>
+  <div class="wrap head">
+    <div>
+      <h1>Aephirum RPG — Ficha</h1>
+    </div>
+    <div class="actions">
+	  <button class="btn btn-danger" onclick="resetForm()">Novo</button>
+      <button class="btn" id="btnImport">Importar JSON</button>
+      <button class="btn" id="btnExport">Exportar JSON</button>
+      <button class="btn primary" onclick="window.print()">Imprimir / PDF</button>
+      <button class="btn" id="btnInstall">Instalar App</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+<!-- TOPO: IDENTIFICAÇÃO  -->
+<div class="top-grid">
+  <!-- BLOCO 1 — IDENTIFICAÇÃO -->
+  <section id="bl_ident" class="card">
+    <h2>DADOS PADRÃO</h2>
+    <div class="row2">
+		<div id="idl1">
+			<div id="div_nome"><label>Nome</label><input type="text" id="nome" width="60ch"></div>
+			<div id="div_idade"><label>Idade</label><input type="number" id="idade" width="10ch"></div>
+			<div id="div_doutrina"><label>Doutrina</label><input type="text" id="doutrina" width="20ch"></div>
+		</div>
+		<div id="idl2">
+			<div id="div_raca"><label>Raça / Ramificação</label><input type="text" id="raca" width="30ch"></div>
+			<div id="div_essencia"><label>Essência</label><input type="text" id="essencia" maxlength="20"></div>
+			<div id="div_origem"><label>Origem / Cultura</label><input type="text" id="origem" maxlength="20"></div>
+
+		</div>
+		<div id="idl3">
+			<div id="div_afinidade" width="20ch"><label>Afinidade</label>
+				<select id="afinidade">
+					<option value=""></option>
+					<option>ÁGUA</option><option>FOGO</option><option>TERRA</option><option>AR</option>
+					<option>LUZ</option><option>ESCURIDÃO</option><option>ESPÍRITO</option><option>CAOS</option>
+					<option>ÉTER</option><option>ORDEM</option><option>SONHO</option><option>TEMPO</option><option>PRIMÓRDIO</option>
+				</select>
+			</div>
+			<div id="div_aversao" width="20ch"><label>Aversão</label>
+				<select id="aversao">
+					<option value=""></option>
+					<option>ÁGUA</option><option>FOGO</option><option>TERRA</option><option>AR</option>
+					<option>LUZ</option><option>ESCURIDÃO</option><option>ESPÍRITO</option><option>CAOS</option>
+					<option>ÉTER</option><option>ORDEM</option><option>SONHO</option><option>TEMPO</option><option>PRIMÓRDIO</option>
+				</select>
+			</div>
+			<div id="div_macula"><label>Mácula</label>
+				<select id="macula">
+					<option value=""></option>
+					<option>SOBERBA</option><option>AVAREZA</option><option>LUXÚRIA</option>
+					<option>IRA</option><option>GULA</option><option>INVEJA</option><option>PREGUIÇA</option>
+				</select>
+			</div>
+			<div id="div_expiacao"><label>Expiação</label>
+				<select id="expiacao">
+					<option value=""></option>
+					<option>HUMILDADE</option><option>ALTRUÍSMO</option><option>HONRA</option>
+					<option>MISERICÓRDIA</option><option>TEMPERANÇA</option><option>CARIDADE</option><option>DILIGÊNCIA</option>
+				</select>
+			</div>
+		</div>
+		
+    </div>
+  </section>
+</div>
+
+<div class="grid">
+
+  <!-- Linha 2: esquerda = Capacidades + Aspectos | direita = Aparência -->
+	<div class="grid_left">
+    <!-- BLOCO 2 — CAPACIDADES (esquerda) -->
+    <section id="bl_caps" class="card">
+      <h2>CAPACIDADES</h2>
+
+      <div class="cap_row">
+        <div>
+          <label title="(Corpo + Resistência) × 5">PV</label>
+          <input id="pv" type="number" readonly placeholder="0">
+        </div>
+        <div>
+          <label title="(Vontade + Resiliência) × 5">PSIQUE</label>
+          <input id="psique" type="number" readonly placeholder="0">
+        </div>
+        <div>
+          <label title="(Moral + Crença) × 5">ALMA</label>
+          <input id="alma" type="number" readonly placeholder="0">
+        </div>
+        <div>
+          <label title="Capacidade Total Mística">ENERGIA</label>
+          <input id="energia" type="number" min="0" placeholder="0">
+        </div>
+        <div>
+          <label title="Valor da Proteção contra Dano">ARMADURA</label>
+          <input id="armadura" type="number" min="0" placeholder="0">
+        </div>
+      </div>
+
+    </section>
+
+    <!-- BLOCO 3 — ASPECTOS (direita) -->
+    <section id="bl_aspects" class="card">
+      <h2>ASPECTOS</h2>
+      <div class="radar">
+        <div class="canvas">
+          <svg id="radar" viewBox="-60 -60 120 120" aria-label="Pentágono de Aspectos"></svg>
+        </div>
+        <div class="alist">
+          <div class="row"><label>CORPO</label><input id="a_corpo" type="number" min="0" max="12" value="0"></div>
+          <div class="row"><label>MENTE</label><input id="a_mente" type="number" min="0" max="12" value="0"></div>
+          <div class="row"><label>VONTADE</label><input id="a_vontade" type="number" min="0" max="12" value="0"></div>
+          <div class="row"><label>SOCIAL</label><input id="a_social" type="number" min="0" max="12" value="0"></div>
+          <div class="row"><label>MORAL</label><input id="a_moral" type="number" min="0" max="12" value="0"></div>
+          <div class="total">TOTAL: <span id="a_total">0</span></div>
+        </div>
+      </div>
+    </section>
+	</div>
+	<div class="grid_right">
+  <!-- BLOCO 4 — MÍDIA -->
+<section class="card" id="bl_midia">
+  <h2 title="MÍDIA (Imagem/Link)">APARÊNCIA</h2>
+
+<div class="midia-layout-vertical">
+  <!-- TOPO: Toggle + Ações -->
+  <div class="midia-top">
+    <div class="btn-group" role="group" aria-label="Origem da imagem">
+      <input type="radio" class="btn-check" name="midiaOption" id="optFile" checked>
+      <label class="btn btn-outline-primary" for="optFile">Arquivo</label>
+
+      <input type="radio" class="btn-check" name="midiaOption" id="optLink">
+      <label class="btn btn-outline-primary" for="optLink">Link</label>
+    </div>
+      <div class="midia-actions">
+      <button type="button" id="btnCarregar" class="btn primary">Carregar</button>
+      <button type="button" id="btnLimpar" class="btn">Limpar</button>
+    </div>
+
+
+  </div>
+
+  <!-- MEIO: entrada (ou Arquivo OU Link) -->
+  <div class="midia-entry">
+    <div id="wrapFile">
+      <button type="button" id="btnPickFile" class="btn">Escolher arquivo…</button>
+      <input type="file" id="imageFile" accept="image/*" class="visually-hidden">
+    </div>
+
+    <div id="wrapLink" class="d-none">
+      <input type="text" id="imageLink" placeholder="Cole o link da imagem (PNG/JPG/WebP)">
+    </div>
+	
+      <center><span id="midiaStatus" class="muted small"></span></center>
+  </div>
+
+  <!-- BAIXO: prévia isolada -->
+  <div class="midia-preview">
+    <div class="midia-wrap">
+      <img id="previewImage" class="midia-img" style="display:none" alt="Prévia do personagem">
+      <div id="midiaPlaceholder" class="placeholder muted">Nenhuma imagem selecionada</div>
+    </div>
+  </div>
+  
+  
+</div>
+
+
+<script>
+(() => {
+  const optFile = document.getElementById('optFile');
+  const optLink = document.getElementById('optLink');
+  const wrapFile = document.getElementById('wrapFile');
+  const wrapLink = document.getElementById('wrapLink');
+
+  const btnPickFile = document.getElementById('btnPickFile');
+  const imageFile   = document.getElementById('imageFile');
+  const imageLink   = document.getElementById('imageLink');
+
+  const btnCarregar = document.getElementById('btnCarregar');
+  const btnLimpar   = document.getElementById('btnLimpar');
+  const midiaStatus = document.getElementById('midiaStatus');
+
+  const previewImage = document.getElementById('previewImage');
+  const midiaPlaceholder = document.getElementById('midiaPlaceholder');
+
+  const setStatus = (msg='') => midiaStatus.textContent = msg;
+
+  function toggleMode() {
+    const useLink = optLink.checked;
+    wrapFile.classList.toggle('d-none', useLink);
+    wrapLink.classList.toggle('d-none', !useLink);
+    // não limpa a imagem automaticamente ao alternar
+  }
+  optFile.addEventListener('change', toggleMode);
+  optLink.addEventListener('change', toggleMode);
+  toggleMode();
+
+  // Botão "Escolher arquivo…"
+  btnPickFile.addEventListener('click', () => imageFile.click());
+
+  // Preview por arquivo
+  function loadFile(file) {
+    if (!file) { setStatus('Nenhum arquivo selecionado.'); return; }
+    if (!file.type?.startsWith('image/')) { setStatus('Selecione uma imagem válida.'); return; }
+    const reader = new FileReader();
+    setStatus('Carregando arquivo…');
+    reader.onload = (evt) => {
+      previewImage.src = evt.target.result;
+      previewImage.style.display = 'block';
+      midiaPlaceholder.style.display = 'none';
+      setStatus('Imagem carregada.');
+      save?.(); // se existir tua função save()
+    };
+    reader.onerror = () => setStatus('Falha ao ler o arquivo.');
+    reader.readAsDataURL(file);
+  }
+  imageFile.addEventListener('change', (e) => loadFile(e.target.files?.[0]));
+
+  // Carregar via URL
+  function applyUrl() {
+    const url = (imageLink.value || '').trim();
+    if (!url) { setStatus('Informe a URL da imagem.'); return; }
+    setStatus('Carregando URL…');
+    // Testa carregamento (onload/onerror do próprio <img>)
+    previewImage.onload  = () => { previewImage.style.display = 'block'; setStatus('Imagem carregada.'); save?.(); };
+    previewImage.onerror = () => { previewImage.style.display = 'none'; previewImage.src=''; setStatus('Falha ao carregar a imagem.'); };
+    previewImage.src = url;
+  }
+
+  // Botões principais
+  btnCarregar.addEventListener('click', () => {
+    if (optFile.checked) {
+      // Se já houver arquivo selecionado, carrega; senão, abre o seletor
+      if (imageFile.files && imageFile.files[0]) loadFile(imageFile.files[0]);
+      else imageFile.click();
+    } else {
+      applyUrl();
+    }
+  });
+
+  btnLimpar.addEventListener('click', () => {
+    imageFile.value = '';
+    imageLink.value = '';
+    previewImage.src = '';
+    previewImage.style.display = 'none';
+	midiaPlaceholder.style.display = 'grid';
+	
+    setStatus('');
+    save?.();
+  });
+
+  // Atalhos úteis
+  imageLink.addEventListener('keydown', (e) => { if (e.key === 'Enter') applyUrl(); });
+
+  // Drag&Drop e Ctrl+V (quando Arquivo estiver ativo)
+  document.addEventListener('paste', (ev) => {
+    if (!optFile.checked) return;
+    const item = [...(ev.clipboardData?.items || [])].find(i => i.type.startsWith('image/'));
+    if (item) loadFile(item.getAsFile());
+  });
+  document.addEventListener('dragover', (e) => e.preventDefault());
+  document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (!optFile.checked) return;
+    const file = e.dataTransfer?.files?.[0];
+    if (file) loadFile(file);
+  });
+})();
+</script>
+
+</section>
+
+	</div>
+
+</div>
+<div class="grid2">
+  <!-- COMPETÊNCIAS -->
+  <section id="bl_comp" class="card">
+    <h2>COMPETÊNCIAS</h2>
+
+    <div class="comp-grid">
+      <!-- Corpo -->
+      <div class="card"">
+        <h3 class="muted">CORPO</h3>
+        <div class="row"><label>Atletismo</label><input id="c_corpo_atletismo" type="number" min="0" max="12"></div>
+        <div class="row"><label>Força</label><input id="c_corpo_forca" type="number" min="0" max="12"></div>
+        <div class="row"><label>Manejo</label><input id="c_corpo_manejo" type="number" min="0" max="12"></div>
+        <div class="row"><label>Bloqueio</label><input id="c_corpo_bloqueio" type="number" min="0" max="12"></div>
+        <div class="row"><label>Resistência</label><input id="c_corpo_resistencia" type="number" min="0" max="12"></div>
+        <div class="row"><label>Percepção</label><input id="c_corpo_percepcao" type="number" min="0" max="12"></div>
+        <div class="row"><label>Reflexos</label><input id="c_corpo_reflexos" type="number" min="0" max="12"></div>
+        <div class="row"><label>Furtividade</label><input id="c_corpo_furtividade" type="number" min="0" max="12"></div>
+      </div>
+
+      <!-- Mente -->
+      <div class="card">
+        <h3 class="muted">MENTE</h3>
+        <div class="row"><label>Conhecimento</label><input id="c_mente_conhecimento" type="number" min="0" max="12"></div>
+        <div class="row"><label>Análise</label><input id="c_mente_analise" type="number" min="0" max="12"></div>
+        <div class="row"><label>Concentração</label><input id="c_mente_concentracao" type="number" min="0" max="12"></div>
+        <div class="row"><label>Criatividade</label><input id="c_mente_criatividade" type="number" min="0" max="12"></div>
+        <div class="row"><label>Estratégia</label><input id="c_mente_estrategia" type="number" min="0" max="12"></div>
+        <div class="row"><label>Linguagem</label><input id="c_mente_linguagem" type="number" min="0" max="12"></div>
+        <div class="row"><label>Intuição</label><input id="c_mente_intuicao" type="number" min="0" max="12"></div>
+        <div class="row"><label>Memória</label><input id="c_mente_memoria" type="number" min="0" max="12"></div>
+      </div>
+
+      <!-- Vontade -->
+      <div class="card">
+        <h3 class="muted">VONTADE</h3>
+        <div class="row"><label>Determinação</label><input id="c_vontade_determinacao" type="number" min="0" max="12"></div>
+        <div class="row"><label>Coragem</label><input id="c_vontade_coragem" type="number" min="0" max="12"></div>
+        <div class="row"><label>Autocontrole</label><input id="c_vontade_autocontrole" type="number" min="0" max="12"></div>
+        <div class="row"><label>Disciplina</label><input id="c_vontade_disciplina" type="number" min="0" max="12"></div>
+        <div class="row"><label>Inspiração</label><input id="c_vontade_inspiracao" type="number" min="0" max="12"></div>
+        <div class="row"><label>Iniciativa</label><input id="c_vontade_iniciativa" type="number" min="0" max="12"></div>
+        <div class="row"><label>Resiliência</label><input id="c_vontade_resiliencia" type="number" min="0" max="12"></div>
+        <div class="row"><label>Meditação</label><input id="c_vontade_meditacao" type="number" min="0" max="12"></div>
+      </div>
+
+      <!-- Social -->
+      <div class="card">
+        <h3 class="muted">SOCIAL</h3>
+        <div class="row"><label>Empatia</label><input id="c_social_empatia" type="number" min="0" max="12"></div>
+        <div class="row"><label>Persuasão</label><input id="c_social_persuasao" type="number" min="0" max="12"></div>
+        <div class="row"><label>Carisma</label><input id="c_social_carisma" type="number" min="0" max="12"></div>
+        <div class="row"><label>Presença</label><input id="c_social_presenca" type="number" min="0" max="12"></div>
+        <div class="row"><label>Manipulação</label><input id="c_social_manipulacao" type="number" min="0" max="12"></div>
+        <div class="row"><label>Diplomacia</label><input id="c_social_diplomacia" type="number" min="0" max="12"></div>
+        <div class="row"><label>Protocolo</label><input id="c_social_protocolo" type="number" min="0" max="12"></div>
+        <div class="row"><label>Performance</label><input id="c_social_performance" type="number" min="0" max="12"></div>
+      </div>
+    </div>
+
+    <!-- Faixa MORAL -->
+    <div class="card">
+      <h3 class="muted">MORAL</h3>
+      <div class="row2" align="center">
+        <div class="row"><label>Ética</label><input id="c_moral_etica" type="number" min="0" max="12"></div>
+        <div class="row"><label>Crença</label><input id="c_moral_crenca" type="number" min="0" max="12"></div>
+      </div>
+    </div>
+	          <div class="total">TOTAL: <span id="c_total">0</span></div>
+
+  </section>
+</div>
+<div class="grid3">
+  <!-- REFINAMENTOS -->
+  <section id="bl_ref" class="card">
+    <h2>Refinamentos</h2>
+    <div class="tools"><button class="btn" id="addRef">+ adicionar</button></div>
+    <div class="scroll">
+      <table id="tRef">
+        <thead><tr><th>Nome</th><th class="small">Grau</th><th>Detalhes</th><th style="width:42px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<div class="grid4">
+  <!-- EQUIPAMENTOS -->
+  <section id="bl_eq" class="card">
+    <h2>Equipamentos</h2>
+    <div class="tools"><button class="btn" id="addEq">+ adicionar</button></div>
+    <div class="scroll">
+      <table id="tEq">
+        <thead><tr><th>Item</th><th class="small">Qtd</th><th>Notas</th><th style="width:42px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<div class="bot_grid">
+  <!-- NOTAS -->
+  <section id="bl_notes" class="card">
+    <h2>Anotações</h2>
+    <textarea id="notas" placeholder="História, laços, ganchos, tradições, acontecimentos…"></textarea>
+  </section>
+</div>
+
+</main>
+
+<!-- ======= PWA: confirmação simples ======= -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js?v=9');
+}
+(() => {
+  const btn = document.getElementById('btnInstall');
+  if (!btn) return;
+  btn.style.display='inline-block';
+  let deferredPrompt = null;
+
+  window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  btn.addEventListener('click', async ()=>{
+    const ok = confirm('Instalar "Aephirum RPG Ficha"?');
+    if (!ok) return;
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch(_) {}
+      deferredPrompt = null;
+    } else {
+      alert('Instalação não suportada neste navegador ou ainda indisponível.');
+    }
+  });
+
+  window.addEventListener('appinstalled', ()=>{
+    btn.textContent = 'Instalado ✓';
+    btn.disabled = true;
+  });
+})();
+</script>
+
+<!-- ======= Midia / Link ======= -->
+
+
+
+<!-- ======= Helpers + Ficha ======= -->
+<script>
+// util
+const $ = (s)=>document.querySelector(s);
+
+// tabelas dinâmicas (Refinamentos/Equipamentos)
+function addRow(tid,type){
+  const tb=document.getElementById(tid).querySelector('tbody');
+  const tr=document.createElement('tr');
+  if(type==='ref'){
+    tr.innerHTML=`<td><input></td><td><input class="small" type="number" min="0"></td><td><input></td><td><button class="btn">×</button></td>`;
+  }else{
+    tr.innerHTML=`<td><input></td><td><input class="small" type="number" min="0" value="1"></td><td><input></td><td><button class="btn">×</button></td>`;
+  }
+  tr.lastElementChild.firstElementChild.onclick=()=>{tr.remove(); save()};
+  tb.appendChild(tr);
+}
+document.getElementById('addRef')?.addEventListener('click', ()=>{addRow('tRef','ref'); save()});
+document.getElementById('addEq')?.addEventListener('click',  ()=>{addRow('tEq','eq');  save()});
+
+// ======= Aspectos + Radar =======
+const A = {Corpo:0, Mente:0, Vontade:0, Social:0, Moral:0};
+
+['a_corpo','a_mente','a_vontade','a_social','a_moral'].forEach(id=>{
+  const el = document.getElementById(id);
+  el.addEventListener('input',()=>{
+    A.Corpo   = +$('#a_corpo').value   || 0;
+    A.Mente   = +$('#a_mente').value   || 0;
+    A.Vontade = +$('#a_vontade').value || 0;
+    A.Social  = +$('#a_social').value  || 0;
+    A.Moral   = +$('#a_moral').value   || 0;
+    $('#a_total').textContent = A.Corpo+A.Mente+A.Vontade+A.Social+A.Moral;
+    drawRadar(); recalcCapsFixed(); save();
+  });
+});
+
+const svg=document.getElementById('radar'); 
+const R=52, N=5, MAX=12;
+function polar(a,r){return [Math.cos(a)*r,Math.sin(a)*r]}
+function drawGrid(){
+  svg.innerHTML='';
+  [1,2,3,5,8].forEach(n=>{
+    const rr=R*(n/12);
+    const pts=[...Array(N)].map((_,i)=>{const ang=-Math.PI/2+i*2*Math.PI/N;const [x,y]=polar(ang,rr);return `${i?'L':'M'}${x.toFixed(2)} ${y.toFixed(2)}`}).join(' ')+' Z';
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',pts); p.setAttribute('stroke','#1d2e4a'); p.setAttribute('fill','none'); p.setAttribute('stroke-width','1');
+    svg.appendChild(p);
+  });
+  for(let i=0;i<N;i++){const [x,y]=polar(-Math.PI/2+i*2*Math.PI/N,R);
+    const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1','0');l.setAttribute('y1','0');l.setAttribute('x2',x);l.setAttribute('y2',y);
+    l.setAttribute('stroke','#254063');l.setAttribute('stroke-width','1');svg.appendChild(l);}
+}
+function drawRadar(){
+  const vals=[A.Corpo,A.Mente,A.Vontade,A.Social,A.Moral];
+  const pts=vals.map((v,i)=>{const ang=-Math.PI/2+i*2*Math.PI/N; const r=R*(Math.max(0,Math.min(MAX,v))/MAX); const [x,y]=polar(ang,r); return `${i?'L':'M'}${x.toFixed(2)} ${y.toFixed(2)}`}).join(' ')+' Z';
+  let poly=svg.querySelector('path.poly');
+  if(!poly){ poly=document.createElementNS('http://www.w3.org/2000/svg','path'); poly.setAttribute('class','poly'); svg.appendChild(poly); }
+  poly.setAttribute('d',pts); poly.setAttribute('fill','rgba(103,201,255,.22)'); poly.setAttribute('stroke','#67c9ff'); poly.setAttribute('stroke-width','2');
+}
+drawGrid(); drawRadar();
+
+// ======= Capacidades (usando competências) =======
+const getN = (id) => Math.max(0, parseInt(document.getElementById(id)?.value || 0, 10) || 0);
+function recalcCapsFixed() {
+  const corpo   = getN('a_corpo');
+  const vontade = getN('a_vontade');
+  const moral   = getN('a_moral');
+  const resistencia = getN('c_corpo_resistencia');   // Corpo
+  const resiliencia = getN('c_vontade_resiliencia'); // Vontade
+  const crenca      = getN('c_moral_crenca');        // Moral
+
+  document.getElementById('pv').value     = (corpo + resistencia) * 5;
+  document.getElementById('psique').value = (vontade + resiliencia) * 5;
+  document.getElementById('alma').value   = (moral + crenca) * 5;
+
+  save?.();
+}
+[
+  // Corpo
+  'c_corpo_atletismo','c_corpo_forca','c_corpo_manejo','c_corpo_bloqueio',
+  'c_corpo_resistencia','c_corpo_percepcao','c_corpo_reflexos','c_corpo_furtividade',
+  // Mente
+  'c_mente_conhecimento','c_mente_analise','c_mente_concentracao','c_mente_criatividade',
+  'c_mente_estrategia','c_mente_linguagem','c_mente_intuicao','c_mente_memoria',
+  // Vontade
+  'c_vontade_determinacao','c_vontade_coragem','c_vontade_autocontrole','c_vontade_disciplina',
+  'c_vontade_inspiracao','c_vontade_iniciativa','c_vontade_resiliencia','c_vontade_meditacao',
+  // Social
+  'c_social_empatia','c_social_persuasao','c_social_carisma','c_social_presenca',
+  'c_social_manipulacao','c_social_diplomacia','c_social_protocolo','c_social_performance',
+  // Moral
+  'c_moral_etica','c_moral_crenca'
+].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', recalcCapsFixed);
+});
+
+// ======= Persistência =======
+const compIds = [
+  // Corpo
+  'c_corpo_atletismo','c_corpo_forca','c_corpo_manejo','c_corpo_bloqueio',
+  'c_corpo_resistencia','c_corpo_percepcao','c_corpo_reflexos','c_corpo_furtividade',
+  // Mente
+  'c_mente_conhecimento','c_mente_analise','c_mente_concentracao','c_mente_criatividade',
+  'c_mente_estrategia','c_mente_linguagem','c_mente_intuicao','c_mente_memoria',
+  // Vontade
+  'c_vontade_determinacao','c_vontade_coragem','c_vontade_autocontrole','c_vontade_disciplina',
+  'c_vontade_inspiracao','c_vontade_iniciativa','c_vontade_resiliencia','c_vontade_meditacao',
+  // Social
+  'c_social_empatia','c_social_persuasao','c_social_carisma','c_social_presenca',
+  'c_social_manipulacao','c_social_diplomacia','c_social_protocolo','c_social_performance',
+  // Moral
+  'c_moral_etica','c_moral_crenca'
+];
+
+const fields = [
+  'nome','raca','origem','essencia','afinidade','aversao','macula','expiacao','doutrina',
+  'a_corpo','a_mente','a_vontade','a_social','a_moral',
+  'pv','psique','alma','energia','armadura','notas','img_url'
+];
+// salvar quando qualquer campo muda
+[...fields, ...compIds].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input', save);
+});
+
+function getCompetenciasObj(){
+  const v = id => parseInt(document.getElementById(id)?.value || 0, 10) || 0;
+  return {
+    corpo: {
+      atletismo:v('c_corpo_atletismo'), forca:v('c_corpo_forca'),
+      manejo:v('c_corpo_manejo'), bloqueio:v('c_corpo_bloqueio'),
+      resistencia:v('c_corpo_resistencia'), percepcao:v('c_corpo_percepcao'),
+      reflexos:v('c_corpo_reflexos'), furtividade:v('c_corpo_furtividade')
+    },
+    mente: {
+      conhecimento:v('c_mente_conhecimento'), analise:v('c_mente_analise'),
+      concentracao:v('c_mente_concentracao'), criatividade:v('c_mente_criatividade'),
+      estrategia:v('c_mente_estrategia'), linguagem:v('c_mente_linguagem'),
+      intuicao:v('c_mente_intuicao'), memoria:v('c_mente_memoria')
+    },
+    vontade: {
+      determinacao:v('c_vontade_determinacao'), coragem:v('c_vontade_coragem'),
+      autocontrole:v('c_vontade_autocontrole'), disciplina:v('c_vontade_disciplina'),
+      inspiracao:v('c_vontade_inspiracao'), iniciativa:v('c_vontade_iniciativa'),
+      resiliencia:v('c_vontade_resiliencia'), meditacao:v('c_vontade_meditacao')
+    },
+    social: {
+      empatia:v('c_social_empatia'), persuasao:v('c_social_persuasao'),
+      carisma:v('c_social_carisma'), presenca:v('c_social_presenca'),
+      manipulacao:v('c_social_manipulacao'), diplomacia:v('c_social_diplomacia'),
+      protocolo:v('c_social_protocolo'), performance:v('c_social_performance')
+    },
+    moral: { etica:v('c_moral_etica'), crenca:v('c_moral_crenca') }
+  };
+}
+
+function setCompetenciasObj(obj){
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.value = val ?? 0; };
+  if(!obj) return;
+  // Corpo
+  set('c_corpo_atletismo',obj.corpo?.atletismo);
+  set('c_corpo_forca',obj.corpo?.forca);
+  set('c_corpo_manejo',obj.corpo?.manejo);
+  set('c_corpo_bloqueio',obj.corpo?.bloqueio);
+  set('c_corpo_resistencia',obj.corpo?.resistencia);
+  set('c_corpo_percepcao',obj.corpo?.percepcao);
+  set('c_corpo_reflexos',obj.corpo?.reflexos);
+  set('c_corpo_furtividade',obj.corpo?.furtividade);
+  // Mente
+  set('c_mente_conhecimento',obj.mente?.conhecimento);
+  set('c_mente_analise',obj.mente?.analise);
+  set('c_mente_concentracao',obj.mente?.concentracao);
+  set('c_mente_criatividade',obj.mente?.criatividade);
+  set('c_mente_estrategia',obj.mente?.estrategia);
+  set('c_mente_linguagem',obj.mente?.linguagem);
+  set('c_mente_intuicao',obj.mente?.intuicao);
+  set('c_mente_memoria',obj.mente?.memoria);
+  // Vontade
+  set('c_vontade_determinacao',obj.vontade?.determinacao);
+  set('c_vontade_coragem',obj.vontade?.coragem);
+  set('c_vontade_autocontrole',obj.vontade?.autocontrole);
+  set('c_vontade_disciplina',obj.vontade?.disciplina);
+  set('c_vontade_inspiracao',obj.vontade?.inspiracao);
+  set('c_vontade_iniciativa',obj.vontade?.iniciativa);
+  set('c_vontade_resiliencia',obj.vontade?.resiliencia);
+  set('c_vontade_meditacao',obj.vontade?.meditacao);
+  // Social
+  set('c_social_empatia',obj.social?.empatia);
+  set('c_social_persuasao',obj.social?.persuasao);
+  set('c_social_carisma',obj.social?.carisma);
+  set('c_social_presenca',obj.social?.presenca);
+  set('c_social_manipulacao',obj.social?.manipulacao);
+  set('c_social_diplomacia',obj.social?.diplomacia);
+  set('c_social_protocolo',obj.social?.protocolo);
+  set('c_social_performance',obj.social?.performance);
+  // Moral
+  set('c_moral_etica',obj.moral?.etica);
+  set('c_moral_crenca',obj.moral?.crenca);
+}
+
+function collect(){
+  return {
+    ident:{ 
+      nome:$('#nome').value, raca:$('#raca').value, origem:$('#origem').value, essencia:$('#essencia').value,
+      afinidade:$('#afinidade').value, aversao:$('#aversao').value, macula:$('#macula').value, expiacao:$('#expiacao').value, doutrina:$('#doutrina').value 
+    },
+    aspectos:{...A,total:A.Corpo+A.Mente+A.Vontade+A.Social+A.Moral},
+    capacidades:{ 
+      pv:$('#pv').value, psique:$('#psique').value, alma:$('#alma').value, 
+      energia:$('#energia').value, armadura:$('#armadura').value 
+    },
+    competencias: getCompetenciasObj(),
+    // tabelas
+    refinamentos: Array.from(document.querySelectorAll('#tRef tbody tr')).map(tr=>Array.from(tr.querySelectorAll('input')).map(i=>i.value)),
+    equipamentos: Array.from(document.querySelectorAll('#tEq tbody tr')).map(tr=>Array.from(tr.querySelectorAll('input')).map(i=>i.value)),
+    midia:{ img: (document.getElementById('previewImage')?.src || ''), url: (document.getElementById('imageLink')?.value || '') },
+
+    notas: $('#notas').value,
+    _meta:{app:'Aephirum Ficha', v:6}
+  };
+}
+function save(){ localStorage.setItem('aephirum_v6', JSON.stringify(collect())); }
+function load(){
+  try{
+    const data=JSON.parse(localStorage.getItem('aephirum_v6')||'null'); 
+    if(!data) { drawGrid(); drawRadar(); return; }
+
+    const id=data.ident||{};
+    $('#nome').value=id.nome||''; $('#raca').value=id.raca||''; $('#origem').value=id.origem||'';
+    $('#essencia').value=id.essencia||''; $('#afinidade').value=id.afinidade||''; $('#aversao').value=id.aversao||'';
+    $('#macula').value=id.macula||''; $('#expiacao').value=id.expiacao||''; $('#doutrina').value=id.doutrina||'';
+
+    const asp=data.aspectos||{};
+    $('#a_corpo').value=asp.Corpo||0; $('#a_mente').value=asp.Mente||0; $('#a_vontade').value=asp.Vontade||0; $('#a_social').value=asp.Social||0; $('#a_moral').value=asp.Moral||0;
+    Object.assign(A,asp);
+    $('#a_total').textContent = A.Corpo+A.Mente+A.Vontade+A.Social+A.Moral; 
+    drawGrid(); drawRadar();
+
+    const cap=data.capacidades||{};
+    $('#pv').value=cap.pv||''; $('#psique').value=cap.psique||''; $('#alma').value=cap.alma||'';
+    $('#energia').value=cap.energia||''; $('#armadura').value=cap.armadura||'';
+
+    // competências (novo formato objeto)
+    setCompetenciasObj(data.competencias);
+
+    // tabelas
+    const fillTable = (tid,arr) => {
+      const tb=document.querySelector(`#${tid} tbody`); tb.innerHTML='';
+      (arr||[]).forEach(row=>{
+        const tr=document.createElement('tr');
+        if(tid==='tRef'){
+          tr.innerHTML=`<td><input value="${row?.[0]||''}"></td><td><input class="small" type="number" min="0" value="${row?.[1]||''}"></td><td><input value="${row?.[2]||''}"></td><td><button class="btn">×</button></td>`;
+        }else{
+          tr.innerHTML=`<td><input value="${row?.[0]||''}"></td><td><input class="small" type="number" min="0" value="${row?.[1]||'1'}"></td><td><input value="${row?.[2]||''}"></td><td><button class="btn">×</button></td>`;
+        }
+        tr.lastElementChild.firstElementChild.onclick=()=>{tr.remove(); save()};
+        tb.appendChild(tr);
+      });
+    };
+    fillTable('tRef', data.refinamentos);
+    fillTable('tEq',  data.equipamentos);
+
+		const mid = data.midia || {};
+		const prev = document.getElementById('previewImage');
+		const urlI = document.getElementById('imageLink');
+		if (mid.img && prev) { prev.src = mid.img; prev.style.display = 'block'; }
+		if (mid.url && urlI) { urlI.value = mid.url; }
+
+    $('#notas').value=data.notas||'';
+
+    recalcCapsFixed();
+  }catch(e){
+    drawGrid(); drawRadar();
+  }
+}
+document.getElementById('btnExport').addEventListener('click',()=>{ 
+  const blob=new Blob([JSON.stringify(collect(),null,2)],{type:'application/json'}); 
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(($('#nome').value||'ficha')+'.json'); a.click(); 
+});
+document.getElementById('btnImport').addEventListener('click',()=>{ 
+  const i=document.createElement('input'); i.type='file'; i.accept='application/json'; 
+  i.onchange=()=>i.files[0].text().then(t=>{localStorage.setItem('aephirum_v6',t); load()}); i.click() 
+});
+window.addEventListener('load', load);
+
+function resetForm() {
+  // Reseta todos os formulários da ficha
+  document.querySelectorAll("form").forEach(form => form.reset());
+
+  // Limpa manualmente todos os inputs de texto/number se não estiverem dentro de <form>
+  document.querySelectorAll("input[type='text'], input[type='number'], textarea").forEach(el => {
+    el.value = "";
+  });
+
+  // Limpa exibição da imagem no bloco de mídia
+  const preview = document.getElementById("midiaPreview");
+  if (preview) {
+    preview.innerHTML = '<p class="text-muted">Nenhuma imagem selecionada</p>';
+  }
+  
+  // Resetar todos campos de Seleção
+	const selects = document.querySelectorAll("#bl_ident select");
+	selects.forEach(sel => sel.selectedIndex = 0);
+	  const imageFile   = document.getElementById('imageFile');
+	  
+  const imageLink   = document.getElementById('imageLink');
+  const previewImage = document.getElementById('previewImage');
+  const midiaPlaceholder = document.getElementById('midiaPlaceholder');
+
+
+  document.addEventListener('click', () => {
+    imageFile.value = '';
+    imageLink.value = '';
+    previewImage.src = '';
+    previewImage.style.display = 'none';
+    midiaPlaceholder.style.display = 'grid';
+	
+    setStatus('');
+    save?.();
+  });
+}
+
+</script>
+<script>
+function atualizarTotalCompetencias() {
+  let total = 0;
+  document.querySelectorAll('#bl_comp input').forEach(el => {
+    const v = parseInt(el.value, 10);
+    if (!isNaN(v)) total += v;
+  });
+  document.getElementById('c_total').textContent = total;
+}
+
+// Atualiza sempre que um campo muda
+document.addEventListener('input', e => {
+  if (e.target.closest('#bl_comp')) {
+    atualizarTotalCompetencias();
+  }
+});
+
+// Atualiza também no carregamento inicial
+document.addEventListener('DOMContentLoaded', atualizarTotalCompetencias);
+</script>
+
+<script>
+// COLOCA ZERO ENTODOS CAMPOS NUMERICOS VAZIOS
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('input[type="number"]').forEach(input => {
+    if (!input.hasAttribute("placeholder")) {
+      input.setAttribute("placeholder", "0");
+    }
+  });
+});
+</script>
+
+
+<script>
+window.addEventListener("load", () => {
+  // dispara o botão "Novo"
+  document.querySelector('button.btn.btn-danger[onclick="resetForm()"]')?.click();
+
+  // dispara o botão "Limpar"
+  document.getElementById("btnLimpar")?.click();
+});
+</script>
+</body>
+</html>
