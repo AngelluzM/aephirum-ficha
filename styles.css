@@ -426,12 +426,13 @@ div {
 }
 	
 	section#bl_aspects {
-    height: 470px;
+    /* height: 470px; */
 
 }
 
-div #previewImage{
-	max-width: 350px !important;
+div #previewImage {
+    max-width: 350px !important;
+    max-height: 390px !important;
 }
 
 label{display:block;font-size:12px;color:#c9d9f1;/*margin:6px 0 4px;*/}
@@ -466,8 +467,6 @@ textarea{min-height:120px;width:100%;resize:vertical;}
 
 #idl1 {
     display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
 }
 
 #idl2 {
@@ -525,14 +524,7 @@ textarea{min-height:120px;width:100%;resize:vertical;}
   #bl_midia .canvas{ min-height:220px; }
   #bl_midia .placeholder{ display:none !important; } /* some no PDF quando a imagem existe */
 
-div#idl1 {
-    display: grid; 
-    grid-template-columns: auto auto auto;
-	width:1020px;
-	justify-content: space-between;
-}
-
-div#idl2 {
+div#idl1, div#idl2 {
     display: grid; 
     grid-template-columns: auto auto auto;
 	width:1020px;
@@ -552,7 +544,9 @@ div#idl3 {
 	gap:8px;
 	justify-self: center;
 }
-
+#bl_comp .card {
+	margin-top: 8px;
+}
 
 /* ======= largura 980px ======== *
 @media (max-width: 980px){
@@ -585,6 +579,7 @@ div#idl3 {
   
 }
 */
+
 @media (max-width: 1080px ) {
 	body {width:1060px !important;}
 	.header{width:1060px!important;}
@@ -671,65 +666,63 @@ div#idl3 {
 
 }
 
-/* =======  PRINT =========*/
 @media print{
 
-  /* Fundo limpo e economiza tinta */
-  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-  /* Esconde controles de app/ação */
-  header, .actions, .tools, #btnInstall { display: none !important; }
-
-  /* Usa a largura total imprimível */
-  .wrap { max-width: none !important; padding: 0 !important; }
-
-  /* Tira sticky no print */
-  .sticky-md { position: static !important; top: auto !important; }
-
-  /* Evita quebra de cards entre páginas */
-  #bl_caps, #bl_aspects, #bl_ident, #bl_comp, #bl_ref, #bl_eq, #bl_midia, #bl_notes {
-    break-inside: avoid; page-break-inside: avoid;
+  @page {
+    size: A4;              /* ou A4 landscape */
+    margin: 12mm;          /* 10–15mm é um sweet spot */
   }
 
-  /* Radar menor para caber lado a lado */
-  :root { --radar-print: 170px; }
-  .radar { grid-template-columns: var(--radar-print) 1fr !important; }
-  .canvas { width: var(--radar-print) !important; height: var(--radar-print) !important; }
+  html, body {
+    width: 180mm !important;         /* retrato */
+    height: 297mm;
+    margin-left: 100px;              /* não deixe margem dupla (navegador + sua) */
+    margin-right: 10px !important;
+    font-size: 12px;
+    line-height: 1.3;
+    color: #e9f2ff;     /* adicionado */
+    background: #0d1320;        /* adicionado */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-family: system-ui, "Segoe UI", Roboto, Inter, Arial, sans-serif; /* adicionado */
+	max-width: 1060px !important;
+	justify-content: center !important;
+  }
 
-  /* Tabelas mais compactas */
-  thead th { padding: 7px 8px !important; font-size: 11px !important; }
-  tbody td { padding: 6px 8px !important; }
+  /* 3) Layout: expanda e evite quebras feias */
+  header, .actions, .tools, #btnInstall, .midia-actions,
+  .btn, .btn-group, .dropzone, .visually-hidden, no-print {
+    display: none !important;
+  }
 
-  /* ===== Layout de impressão =====
-     Como o #bl_ident está fora da .grid no HTML,
-     imprimimos assim:
-       1) Identificação em largura total
-       2) Linha com: (Capacidades + Aspectos) | (Aparência)
-  */
-
-  /* 1) Identificação ocupa largura total */
-  .top-grid { grid-template-columns: 1fr !important; } /* corrigindo o seletor (não .top_grip) */
-
-  /* 2) Linha abaixo com 2 colunas simétricas */
-  .grid { grid-template-columns: 430px 610px !important; gap: 8px !important; max-height:470px !important;
-    display: grid;
-    height: 435px;
-    justify-content: center;
+main .wrap {
+	width: 80% !important;
+	
 }
 
-  /* Aparência: preview visível e área adequada no papel */
-  /*#bl_midia .midia-layout-vertical { grid-template-rows: auto auto minmax(220px, 1fr) !important; }*/
-  #bl_midia .midia-preview { min-height: 220px !important; /*height:100% !important;*/}
-  div.midia-top, div.midia-entry, div.midia-actions {display:none !important;}
-  /*section#bl_midia.card {height: -webkit-fill-available;}*/
-  .alist {
-    display: grid;
-    grid-template-columns: repeat(6, auto) !important;
-	gap:8px;
-	justify-self: center;
+  /* Evitar que cartões quebrem no meio */
+  .card{ break-inside:avoid; page-break-inside:avoid; }
+
+#bl_midia .muted {
+    display: none !important;
 }
-.total {
-    display: none;
+
+#bl_comp .card {
+    margin-top: 8px;
+	display:grid !important;
+	justify-content: center !important;
 }
-}/* final dos comandos para versão print*/
-  
+
+#bl_comp .row {
+    display: grid !important;
+    grid-template-columns: auto 64px !important;
+    align-items: center !important;
+    gap: 8px !important;
+    justify-content: space-between !important;
+}
+
+section#bl_comp.card div.card {
+	height: auto !important;
+}
+
+}
