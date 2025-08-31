@@ -17,6 +17,7 @@
     </div>
     <div class="actions">
 	  <button class="btn btn-danger" onclick="resetForm()">Novo</button>
+	  <button id="btnSaveSheetPNG" class="btn primary" type="button" title="Salvar a ficha como PNG">Ficha (PNG)</button>
       <button class="btn" id="btnImport">Importar JSON</button>
       <button class="btn" id="btnExport">Exportar JSON</button>
       <button class="btn primary" onclick="window.print()">Imprimir / PDF</button>
@@ -121,11 +122,11 @@
           <svg id="radar" viewBox="-60 -60 120 120" aria-label="Pentágono de Aspectos"></svg>
         </div>
         <div class="alist">
-          <div class="row"><label>CORPO</label><input id="a_corpo" type="number" min="0" max="12" value="0"></div>
-          <div class="row"><label>MENTE</label><input id="a_mente" type="number" min="0" max="12" value="0"></div>
-          <div class="row"><label>VONTADE</label><input id="a_vontade" type="number" min="0" max="12" value="0"></div>
-          <div class="row"><label>SOCIAL</label><input id="a_social" type="number" min="0" max="12" value="0"></div>
-          <div class="row"><label>MORAL</label><input id="a_moral" type="number" min="0" max="12" value="0"></div>
+          <div class="row"><label>CORPO</label><input id="a_corpo" type="number" min="0" max="4" value="0"></div>
+          <div class="row"><label>MENTE</label><input id="a_mente" type="number" min="0" max="4" value="0"></div>
+          <div class="row"><label>VONTADE</label><input id="a_vontade" type="number" min="0" max="4" value="0"></div>
+          <div class="row"><label>SOCIAL</label><input id="a_social" type="number" min="0" max="4" value="0"></div>
+          <div class="row"><label>MORAL</label><input id="a_moral" type="number" min="0" max="4" value="0"></div>
           <div class="total">TOTAL: <span id="a_total">0</span></div>
         </div>
       </div>
@@ -171,7 +172,8 @@
   <!-- BAIXO: prévia isolada -->
   <div class="midia-preview">
     <div class="midia-wrap">
-      <img id="previewImage" class="midia-img" style="display:none" alt="Prévia do personagem">
+      <img id="previewImage" class="midia-img" style="display:none" alt="Prévia do personagem" alt="" crossorigin="anonymous" referrerpolicy="no-referrer">
+
       <div id="midiaPlaceholder" class="placeholder muted">Nenhuma imagem selecionada</div>
     </div>
   </div>
@@ -297,53 +299,53 @@
       <!-- Corpo -->
       <div class="card"">
         <h3 class="muted">CORPO</h3>
-        <div class="row"><label>Atletismo</label><input id="c_corpo_atletismo" type="number" min="0" max="12"></div>
-        <div class="row"><label>Força</label><input id="c_corpo_forca" type="number" min="0" max="12"></div>
-        <div class="row"><label>Manejo</label><input id="c_corpo_manejo" type="number" min="0" max="12"></div>
-        <div class="row"><label>Bloqueio</label><input id="c_corpo_bloqueio" type="number" min="0" max="12"></div>
-        <div class="row"><label>Resistência</label><input id="c_corpo_resistencia" type="number" min="0" max="12"></div>
-        <div class="row"><label>Percepção</label><input id="c_corpo_percepcao" type="number" min="0" max="12"></div>
-        <div class="row"><label>Reflexos</label><input id="c_corpo_reflexos" type="number" min="0" max="12"></div>
-        <div class="row"><label>Furtividade</label><input id="c_corpo_furtividade" type="number" min="0" max="12"></div>
+        <div class="row"><label>Atletismo</label><input id="c_corpo_atletismo" type="number" min="0" max="4"></div>
+        <div class="row"><label>Força</label><input id="c_corpo_forca" type="number" min="0" max="4"></div>
+        <div class="row"><label>Manejo</label><input id="c_corpo_manejo" type="number" min="0" max="4"></div>
+        <div class="row"><label>Bloqueio</label><input id="c_corpo_bloqueio" type="number" min="0" max="4"></div>
+        <div class="row"><label>Resistência</label><input id="c_corpo_resistencia" type="number" min="0" max="4"></div>
+        <div class="row"><label>Percepção</label><input id="c_corpo_percepcao" type="number" min="0" max="4"></div>
+        <div class="row"><label>Reflexos</label><input id="c_corpo_reflexos" type="number" min="0" max="4"></div>
+        <div class="row"><label>Furtividade</label><input id="c_corpo_furtividade" type="number" min="0" max="4"></div>
       </div>
 
       <!-- Mente -->
       <div class="card">
         <h3 class="muted">MENTE</h3>
-        <div class="row"><label>Conhecimento</label><input id="c_mente_conhecimento" type="number" min="0" max="12"></div>
-        <div class="row"><label>Análise</label><input id="c_mente_analise" type="number" min="0" max="12"></div>
-        <div class="row"><label>Concentração</label><input id="c_mente_concentracao" type="number" min="0" max="12"></div>
-        <div class="row"><label>Criatividade</label><input id="c_mente_criatividade" type="number" min="0" max="12"></div>
-        <div class="row"><label>Estratégia</label><input id="c_mente_estrategia" type="number" min="0" max="12"></div>
-        <div class="row"><label>Linguagem</label><input id="c_mente_linguagem" type="number" min="0" max="12"></div>
-        <div class="row"><label>Intuição</label><input id="c_mente_intuicao" type="number" min="0" max="12"></div>
-        <div class="row"><label>Memória</label><input id="c_mente_memoria" type="number" min="0" max="12"></div>
+        <div class="row"><label>Conhecimento</label><input id="c_mente_conhecimento" type="number" min="0" max="4"></div>
+        <div class="row"><label>Análise</label><input id="c_mente_analise" type="number" min="0" max="4"></div>
+        <div class="row"><label>Concentração</label><input id="c_mente_concentracao" type="number" min="0" max="4"></div>
+        <div class="row"><label>Criatividade</label><input id="c_mente_criatividade" type="number" min="0" max="4"></div>
+        <div class="row"><label>Estratégia</label><input id="c_mente_estrategia" type="number" min="0" max="4"></div>
+        <div class="row"><label>Linguagem</label><input id="c_mente_linguagem" type="number" min="0" max="4"></div>
+        <div class="row"><label>Intuição</label><input id="c_mente_intuicao" type="number" min="0" max="4"></div>
+        <div class="row"><label>Memória</label><input id="c_mente_memoria" type="number" min="0" max="4"></div>
       </div>
 
       <!-- Vontade -->
       <div class="card">
         <h3 class="muted">VONTADE</h3>
-        <div class="row"><label>Determinação</label><input id="c_vontade_determinacao" type="number" min="0" max="12"></div>
-        <div class="row"><label>Coragem</label><input id="c_vontade_coragem" type="number" min="0" max="12"></div>
-        <div class="row"><label>Autocontrole</label><input id="c_vontade_autocontrole" type="number" min="0" max="12"></div>
-        <div class="row"><label>Disciplina</label><input id="c_vontade_disciplina" type="number" min="0" max="12"></div>
-        <div class="row"><label>Inspiração</label><input id="c_vontade_inspiracao" type="number" min="0" max="12"></div>
-        <div class="row"><label>Iniciativa</label><input id="c_vontade_iniciativa" type="number" min="0" max="12"></div>
-        <div class="row"><label>Resiliência</label><input id="c_vontade_resiliencia" type="number" min="0" max="12"></div>
-        <div class="row"><label>Meditação</label><input id="c_vontade_meditacao" type="number" min="0" max="12"></div>
+        <div class="row"><label>Determinação</label><input id="c_vontade_determinacao" type="number" min="0" max="4"></div>
+        <div class="row"><label>Coragem</label><input id="c_vontade_coragem" type="number" min="0" max="4"></div>
+        <div class="row"><label>Autocontrole</label><input id="c_vontade_autocontrole" type="number" min="0" max="4"></div>
+        <div class="row"><label>Disciplina</label><input id="c_vontade_disciplina" type="number" min="0" max="4"></div>
+        <div class="row"><label>Inspiração</label><input id="c_vontade_inspiracao" type="number" min="0" max="4"></div>
+        <div class="row"><label>Iniciativa</label><input id="c_vontade_iniciativa" type="number" min="0" max="4"></div>
+        <div class="row"><label>Resiliência</label><input id="c_vontade_resiliencia" type="number" min="0" max="4"></div>
+        <div class="row"><label>Meditação</label><input id="c_vontade_meditacao" type="number" min="0" max="4"></div>
       </div>
 
       <!-- Social -->
       <div class="card">
         <h3 class="muted">SOCIAL</h3>
-        <div class="row"><label>Empatia</label><input id="c_social_empatia" type="number" min="0" max="12"></div>
-        <div class="row"><label>Persuasão</label><input id="c_social_persuasao" type="number" min="0" max="12"></div>
-        <div class="row"><label>Carisma</label><input id="c_social_carisma" type="number" min="0" max="12"></div>
-        <div class="row"><label>Presença</label><input id="c_social_presenca" type="number" min="0" max="12"></div>
-        <div class="row"><label>Manipulação</label><input id="c_social_manipulacao" type="number" min="0" max="12"></div>
-        <div class="row"><label>Diplomacia</label><input id="c_social_diplomacia" type="number" min="0" max="12"></div>
-        <div class="row"><label>Protocolo</label><input id="c_social_protocolo" type="number" min="0" max="12"></div>
-        <div class="row"><label>Performance</label><input id="c_social_performance" type="number" min="0" max="12"></div>
+        <div class="row"><label>Empatia</label><input id="c_social_empatia" type="number" min="0" max="4"></div>
+        <div class="row"><label>Persuasão</label><input id="c_social_persuasao" type="number" min="0" max="4"></div>
+        <div class="row"><label>Carisma</label><input id="c_social_carisma" type="number" min="0" max="4"></div>
+        <div class="row"><label>Presença</label><input id="c_social_presenca" type="number" min="0" max="4"></div>
+        <div class="row"><label>Manipulação</label><input id="c_social_manipulacao" type="number" min="0" max="4"></div>
+        <div class="row"><label>Diplomacia</label><input id="c_social_diplomacia" type="number" min="0" max="4"></div>
+        <div class="row"><label>Protocolo</label><input id="c_social_protocolo" type="number" min="0" max="4"></div>
+        <div class="row"><label>Performance</label><input id="c_social_performance" type="number" min="0" max="4"></div>
       </div>
     </div>
 
@@ -351,8 +353,8 @@
     <div class="card">
       <h3 class="muted">MORAL</h3>
       <div class="row2" align="center">
-        <div class="row"><label>Ética</label><input id="c_moral_etica" type="number" min="0" max="12"></div>
-        <div class="row"><label>Crença</label><input id="c_moral_crenca" type="number" min="0" max="12"></div>
+        <div class="row"><label>Ética</label><input id="c_moral_etica" type="number" min="0" max="4"></div>
+        <div class="row"><label>Crença</label><input id="c_moral_crenca" type="number" min="0" max="4"></div>
       </div>
     </div>
 	          <div class="total">TOTAL: <span id="c_total">0</span></div>
@@ -394,6 +396,8 @@
 </div>
 
 </main>
+
+
 
 <!-- ======= PWA: confirmação simples ======= -->
 <script>
@@ -801,5 +805,184 @@ window.addEventListener("load", () => {
   document.getElementById("btnLimpar")?.click();
 });
 </script>
+
+<script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<!-- Lib DOM -> PNG -->
+<script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
+
+<script>
+/* opcional: helper de status pra avisos */
+window.setStatus = window.setStatus || function setStatus(msg, type="info"){
+  const el = document.getElementById("status") || document.querySelector("[data-status]");
+  if (!el) return (type==="error"?console.error:console.log)(msg);
+  el.textContent = String(msg);
+  el.classList.remove("is-info","is-warn","is-error");
+  el.classList.add(type==="error" ? "is-error" : type==="warn" ? "is-warn" : "is-info");
+};
+
+(function(){
+  const btn = document.getElementById("btnSaveSheetPNG");
+  if (!btn) return;
+
+  // Alvos existentes no seu HTML (raiz da ficha)
+  const TARGETS = ["main.wrap", ".wrap", "main", "body"];
+
+  function pickTarget(){
+    for (const sel of TARGETS){
+      const el = document.querySelector(sel);
+      if (el) return el;
+    }
+    return document.body;
+  }
+
+  // Injeta regras temporárias que espelham o @media print
+  function enterExportMode(){
+    document.documentElement.classList.add("export-png");
+    // estilo inline pra não depender de editar seu CSS
+    const css = `
+      .export-png header, .export-png .actions, .export-png .tools, .export-png #btnInstall{ display:none !important; }
+      .export-png main.wrap{ padding: 0 !important; }
+      .export-png .card{ break-inside:avoid; page-break-inside:avoid; }
+      .export-png .top-grid{ grid-template-columns: 1fr !important; }
+      .export-png .grid{ grid-template-columns: 1fr 1fr !important; gap:8px !important; align-items:start; }
+      .export-png .grid2, .export-png .grid3, .export-png .grid4{ grid-template-columns: 1fr 1fr !important; }
+      .export-png #bl_midia .media-top,
+      .export-png #bl_midia .media-entry,
+      .export-png #bl_midia .media-actions{ display:none !important; }
+      .export-png #bl_midia .media-preview{ min-height: 220px !important; }
+      .export-png .media-wrap{ min-height: 220px !important; }
+      .export-png .radar{ grid-template-columns: 180px 1fr !important; }
+      .export-png .canvas{ width:180px; height:180px; }
+      thead th{ padding:9px 10px; font-size:12px; }
+      tbody td{ padding:8px 10px; }
+    `;
+    const style = document.createElement("style");
+    style.id = "export-png-style";
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+  function exitExportMode(){
+    document.documentElement.classList.remove("export-png");
+    const style = document.getElementById("export-png-style");
+    if (style) style.remove();
+  }
+
+  function sameOriginUrl(src){
+    if (!src || src.startsWith("data:") || src.startsWith("blob:")) return true;
+    try { return new URL(src, location.href).origin === location.origin; }
+    catch { return true; } // relativos ok
+  }
+
+  // gera um único PNG (alto) da ficha
+  async function exportSingle(el){
+    const bg = getComputedStyle(document.body).backgroundColor || "#0d1320";
+    const scale = Math.max(2, Math.ceil(window.devicePixelRatio || 1));
+
+    // esconder placeholders (senão aparecem por cima)
+    const phs = el.querySelectorAll(".placeholder");
+    const memo = [];
+    phs.forEach(p => { memo.push([p, p.style.display]); p.style.display = "none"; });
+
+    try{
+      const dataUrl = await htmlToImage.toPng(el, {
+        backgroundColor: bg,
+        pixelRatio: scale,
+        cacheBust: true,
+        filter: (node) => {
+          if (node.tagName === "IMG") {
+            const src = node.getAttribute("src") || "";
+            if (!src.trim()) return false;          // ignora img vazia
+            if (!sameOriginUrl(src)) return false;  // pula imagens remotas sem CORS
+          }
+          return true;
+        }
+      });
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().replace(/[:.]/g,"-");
+      a.href = dataUrl;
+      a.download = `ficha-${stamp}.png`;
+      a.click();
+    }catch(err){
+      console.error("Falha ao exportar PNG:", err);
+      setStatus("Falha ao exportar PNG. Se usar imagem externa, hospede com CORS ou use upload local.", "error");
+      alert("Falha ao exportar PNG.\nDica: use avatar por upload (data URL) ou imagem do mesmo domínio / com CORS.");
+    }finally{
+      memo.forEach(([p, old]) => p.style.display = old ?? "");
+    }
+  }
+
+  // fatia o PNG longo em páginas A4 (várias PNGs)
+  async function exportPaged(el){
+    const bg = getComputedStyle(document.body).backgroundColor || "#0d1320";
+    const scale = Math.max(2, Math.ceil(window.devicePixelRatio || 1));
+
+    // 1) renderiza UMA imagem alta
+    const dataUrl = await htmlToImage.toPng(el, {
+      backgroundColor: bg, pixelRatio: scale, cacheBust: true,
+      filter: (node) => {
+        if (node.tagName === "IMG") {
+          const src = node.getAttribute("src") || "";
+          if (!src.trim()) return false;
+          if (!sameOriginUrl(src)) return false;
+        }
+        return true;
+      }
+    });
+
+    // 2) carrega a imagem e fatia em razão A4
+    const img = await new Promise((res, rej) => {
+      const im = new Image();
+      im.onload = () => res(im);
+      im.onerror = rej;
+      im.src = dataUrl;
+    });
+
+    // largura/h de origem
+    const srcW = img.naturalWidth;
+    const srcH = img.naturalHeight;
+
+    // altura de página A4 em pixels mantendo a largura (A4 ~ 1.414)
+    const pageH = Math.floor(srcW * 1.41421356237);
+
+    let offset = 0, page = 1;
+    while (offset < srcH){
+      const sliceH = Math.min(pageH, srcH - offset);
+      const c = document.createElement("canvas");
+      c.width = srcW; c.height = sliceH;
+      const ctx = c.getContext("2d");
+      ctx.drawImage(img, 0, offset, srcW, sliceH, 0, 0, srcW, sliceH);
+      const url = c.toDataURL("image/png");
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().replace(/[:.]/g,"-");
+      a.href = url;
+      a.download = `ficha-A4-p${String(page).padStart(2,"0")}-${stamp}.png`;
+      a.click();
+      offset += sliceH;
+      page += 1;
+    }
+  }
+
+  btn.addEventListener("click", async (e) => {
+    const el = pickTarget();
+    if (!el) return alert("Não achei a raiz da ficha.");
+
+    window.scrollTo(0,0); // garante topo
+    enterExportMode();
+    // espera um frame pro layout aplicar as regras de export
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    try{
+      if (e.shiftKey){
+        await exportPaged(el);       // Shift + clique => páginas A4
+      }else{
+        await exportSingle(el);      // Clique normal => PNG único
+      }
+    }finally{
+      exitExportMode();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
