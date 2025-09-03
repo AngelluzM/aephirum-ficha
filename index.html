@@ -172,7 +172,7 @@
   <!-- BAIXO: prévia isolada -->
   <div class="midia-preview">
     <div class="midia-wrap">
-      <img id="previewImage" class="midia-img" style="display:none" alt="Prévia do personagem" alt="" crossorigin="anonymous" referrerpolicy="no-referrer">
+      <img id="previewImage" class="midia-img" style="display:none" alt="Prévia do personagem" crossorigin="anonymous" referrerpolicy="no-referrer">
 
       <div id="midiaPlaceholder" class="placeholder muted">Nenhuma imagem selecionada</div>
     </div>
@@ -269,13 +269,104 @@
   // Atalhos úteis
   imageLink.addEventListener('keydown', (e) => { if (e.key === 'Enter') applyUrl(); });
 
+/** Reset total da ficha (forms, mídia, radar, listas dinâmicas, storage) */
+function resetAll(){
+  // 1) Reset dos <form> e campos básicos
+  document.querySelectorAll("form").forEach(f => f.reset());
+  document.querySelectorAll("input[type='text'], input[type='number'], input[type='url'], input[type='search'], textarea")
+    .forEach(el => el.value = "");
+  document.querySelectorAll("select").forEach(sel => {
+    const opt = sel.querySelector("option[selected]") || sel.options[0];
+    sel.value = opt ? opt.value : "";
+  });
+  document.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(el => {
+    if (el.hasAttribute("data-checked")) el.checked = true; else el.checked = false;
+  });
+
+  // 2) Mídia (Aparência)
+  const file = document.getElementById("imageFile");
+  const link = document.getElementById("imageLink");
+  const img  = document.getElementById("previewImage");
+  const ph   = document.getElementById("midiaPlaceholder") || document.getElementById("mediaPlaceholder");
+  if (file) file.value = "";
+  if (link) link.value = "";
+  if (img)  { img.removeAttribute("src"); img.style.display = "none"; }
+  if (ph)   { ph.style.display = "grid"; }
+  // volta o toggle para "Arquivo" se existir
+  const optFile = document.getElementById("optFile");
+  const optLink = document.getElementById("optLink");
+  if (optFile && optLink){
+    optFile.checked = true;
+    document.getElementById("wrapFile")?.classList.remove("d-none");
+    document.getElementById("wrapLink")?.classList.add("d-none");
+  }
+
+  // 3) Listas dinâmicas: Refinamentos / Itens / Equipamentos (ajuste IDs se usar outros)
+  const listSelectors = [
+    "#refinamentosList", "#refinamentosTable tbody", "#refList", "[data-list='refinamentos']",
+    "#itensList", "#itensTable tbody", "[data-list='itens']",
+    "#equipList", "#equipTable tbody", "[data-list='equipamentos']"
+  ];
+  listSelectors.forEach(sel => {
+    document.querySelectorAll(sel).forEach(node => node.innerHTML = "");
+  });
+  // fallback: remove linhas marcadas como dinâmicas, sem afetar cabeçalho
+  document.querySelectorAll(".dyn-row, [data-row], .ref-row, .item-row").forEach(row => row.remove());
+
+  // 4) Radar: tenta re-render; se não houver função global, limpa o canvas
+  const radarCanvas =
+    document.getElementById("radarCanvas") ||
+    document.querySelector("#bl_aspects canvas, .radar canvas, .canvas canvas");
+  if (radarCanvas && radarCanvas.getContext){
+    const ctx = radarCanvas.getContext("2d");
+    ctx.clearRect(0, 0, radarCanvas.width, radarCanvas.height);
+    if (typeof window.drawRadar === "function") {
+      window.drawRadar();      // sua função, se existir
+    } else if (typeof window.renderRadar === "function") {
+      window.renderRadar();    // sua função, se existir
+    } else {
+      // desenha uma grade básica só pra não ficar vazio
+      const w = radarCanvas.width, h = radarCanvas.height;
+      const cx = w/2, cy = h/2, r = Math.min(cx, cy) - 8;
+      ctx.strokeStyle = "rgba(255,255,255,0.08)";
+      ctx.lineWidth = 1;
+      for (let i=1; i<=5; i++){
+        const ri = (r*i)/5;
+        ctx.beginPath(); ctx.arc(cx, cy, ri, 0, Math.PI*2); ctx.stroke();
+      }
+    }
+  }
+
+  // 5) Storage: apaga chaves da ficha (mantenho alvo, mas pode usar localStorage.clear() se quiser zerar tudo)
+  try {
+    Object.keys(localStorage).forEach(k => {
+      if (/^(aephirum|ficha_|rpg_)/i.test(k)) localStorage.removeItem(k);
+    });
+  } catch(e){ /* ignore */ }
+
+  // 6) Status/UI misc
+  if (typeof setStatus === "function") setStatus("", "info");
+  window.onbeforeunload = null;
+  window.scrollTo(0, 0);
+}
+
+/** Liga o botão "Novo" com proteção para não cadastrar múltiplos handlers */
+(function bindNewButtonOnce(){
+  if (window.__newBtnBound) return;
+  window.__newBtnBound = true;
+  const btnNew = document.getElementById("btnNew") || document.querySelector("[data-action='novo']");
+  if (btnNew){
+    btnNew.addEventListener("click", (e) => { e.preventDefault(); resetAll(); });
+  }
+})();
+
   // Drag&Drop e Ctrl+V (quando Arquivo estiver ativo)
   document.addEventListener('paste', (ev) => {
     if (!optFile.checked) return;
     const item = [...(ev.clipboardData?.items || [])].find(i => i.type.startsWith('image/'));
     if (item) loadFile(item.getAsFile());
   });
-  document.addEventListener('dragover', (e) => e.preventDefault());
+  document.addEventListener('dragover', (e) => { e.preventDefault(); resetAll(); } );
   document.addEventListener('drop', (e) => {
     e.preventDefault();
     if (!optFile.checked) return;
@@ -763,6 +854,8 @@ function resetForm() {
 }
 
 </script>
+
+
 <script>
 function atualizarTotalCompetencias() {
   let total = 0;
@@ -806,14 +899,12 @@ window.addEventListener("load", () => {
 });
 </script>
 
-<script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
-<!-- Lib DOM -> PNG -->
+<!-- Lib DOM -> PNG (mantenha se já estiver) -->
 <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
 
 <script>
-/* opcional: helper de status pra avisos */
 window.setStatus = window.setStatus || function setStatus(msg, type="info"){
-  const el = document.getElementById("status") || document.querySelector("[data-status]");
+  const el = document.getElementById("midiaStatus") || document.querySelector("[data-status]");
   if (!el) return (type==="error"?console.error:console.log)(msg);
   el.textContent = String(msg);
   el.classList.remove("is-info","is-warn","is-error");
@@ -824,7 +915,7 @@ window.setStatus = window.setStatus || function setStatus(msg, type="info"){
   const btn = document.getElementById("btnSaveSheetPNG");
   if (!btn) return;
 
-  // Alvos existentes no seu HTML (raiz da ficha)
+  // raízes possíveis da ficha (sem sheetRoot)
   const TARGETS = ["main.wrap", ".wrap", "main", "body"];
 
   function pickTarget(){
@@ -835,10 +926,9 @@ window.setStatus = window.setStatus || function setStatus(msg, type="info"){
     return document.body;
   }
 
-  // Injeta regras temporárias que espelham o @media print
+  // ===== MODO EXPORT (espelha @media print e desliga efeitos pesados) =====
   function enterExportMode(){
     document.documentElement.classList.add("export-png");
-    // estilo inline pra não depender de editar seu CSS
     const css = `
       .export-png header, .export-png .actions, .export-png .tools, .export-png #btnInstall{ display:none !important; }
       .export-png main.wrap{ padding: 0 !important; }
@@ -846,15 +936,15 @@ window.setStatus = window.setStatus || function setStatus(msg, type="info"){
       .export-png .top-grid{ grid-template-columns: 1fr !important; }
       .export-png .grid{ grid-template-columns: 1fr 1fr !important; gap:8px !important; align-items:start; }
       .export-png .grid2, .export-png .grid3, .export-png .grid4{ grid-template-columns: 1fr 1fr !important; }
-      .export-png #bl_midia .media-top,
-      .export-png #bl_midia .media-entry,
-      .export-png #bl_midia .media-actions{ display:none !important; }
-      .export-png #bl_midia .media-preview{ min-height: 220px !important; }
-      .export-png .media-wrap{ min-height: 220px !important; }
+      .export-png #bl_midia .midia-top,
+      .export-png #bl_midia .midia-entry,
+      .export-png #bl_midia .midia-actions{ display:none !important; }
+      .export-png #bl_midia .midia-preview{ min-height: 220px !important; }
+      .export-png .midia-wrap{ min-height: 220px !important; }
       .export-png .radar{ grid-template-columns: 180px 1fr !important; }
       .export-png .canvas{ width:180px; height:180px; }
-      thead th{ padding:9px 10px; font-size:12px; }
-      tbody td{ padding:8px 10px; }
+      /* corta custo de layout */
+      .export-png *{ animation:none !important; transition:none !important; }
     `;
     const style = document.createElement("style");
     style.id = "export-png-style";
@@ -867,35 +957,63 @@ window.setStatus = window.setStatus || function setStatus(msg, type="info"){
     if (style) style.remove();
   }
 
-  function sameOriginUrl(src){
-    if (!src || src.startsWith("data:") || src.startsWith("blob:")) return true;
-    try { return new URL(src, location.href).origin === location.origin; }
-    catch { return true; } // relativos ok
+  // ===== SANITIZAÇÃO (some temporariamente com img/bg externos ou quebrados) =====
+  function sameOrigin(u){
+    if (!u || u.startsWith("data:") || u.startsWith("blob:")) return true;
+    try { return new URL(u, location.href).origin === location.origin; }
+    catch { return true; } // relativos
   }
 
-  // gera um único PNG (alto) da ficha
-  async function exportSingle(el){
+  function sanitizeForExport(root){
+    const undos = [];
+
+    // 1) <img> cross-origin, vazia ou quebrada -> esconder
+    root.querySelectorAll("img").forEach(img => {
+      const src = img.getAttribute("src") || "";
+      const broken = img.complete && img.naturalWidth === 0;
+      if (!src.trim() || broken || !sameOrigin(src)) {
+        const prev = img.style.display;
+        img.style.display = "none";
+        undos.push(() => img.style.display = prev);
+      } else {
+        // reforça para CORS liberado quando for mesma origem ou data/blob
+        if (!img.getAttribute("crossorigin")) img.setAttribute("crossorigin","anonymous");
+        if (!img.getAttribute("referrerpolicy")) img.setAttribute("referrerpolicy","no-referrer");
+      }
+    });
+
+    // 2) background-image com url(...) externa -> remover bg temporariamente
+    root.querySelectorAll("*").forEach(el => {
+      const bg = getComputedStyle(el).backgroundImage;
+      if (!bg || bg === "none" || !bg.includes("url(")) return;
+      const urls = [...bg.matchAll(/url\\((\"|\\')?(.*?)(\\1)?\\)/g)].map(m => m[2]);
+      const hasForeign = urls.some(u => !sameOrigin(u));
+      if (hasForeign) {
+        const prev = el.style.backgroundImage;
+        el.style.backgroundImage = "none";
+        undos.push(() => el.style.backgroundImage = prev);
+      }
+    });
+
+    // 3) placeholders por cima da imagem -> esconder
+    root.querySelectorAll(".placeholder").forEach(ph => {
+      const prev = ph.style.display;
+      ph.style.display = "none";
+      undos.push(() => ph.style.display = prev);
+    });
+
+    return () => { while (undos.length) undos.pop()(); };
+  }
+
+  // ===== EXPORT =====
+  async function exportSingle(el, pixelRatio){
+    const undo = sanitizeForExport(el);
     const bg = getComputedStyle(document.body).backgroundColor || "#0d1320";
-    const scale = Math.max(2, Math.ceil(window.devicePixelRatio || 1));
-
-    // esconder placeholders (senão aparecem por cima)
-    const phs = el.querySelectorAll(".placeholder");
-    const memo = [];
-    phs.forEach(p => { memo.push([p, p.style.display]); p.style.display = "none"; });
-
     try{
       const dataUrl = await htmlToImage.toPng(el, {
         backgroundColor: bg,
-        pixelRatio: scale,
-        cacheBust: true,
-        filter: (node) => {
-          if (node.tagName === "IMG") {
-            const src = node.getAttribute("src") || "";
-            if (!src.trim()) return false;          // ignora img vazia
-            if (!sameOriginUrl(src)) return false;  // pula imagens remotas sem CORS
-          }
-          return true;
-        }
+        pixelRatio,
+        cacheBust: true
       });
       const a = document.createElement("a");
       const stamp = new Date().toISOString().replace(/[:.]/g,"-");
@@ -904,61 +1022,47 @@ window.setStatus = window.setStatus || function setStatus(msg, type="info"){
       a.click();
     }catch(err){
       console.error("Falha ao exportar PNG:", err);
-      setStatus("Falha ao exportar PNG. Se usar imagem externa, hospede com CORS ou use upload local.", "error");
-      alert("Falha ao exportar PNG.\nDica: use avatar por upload (data URL) ou imagem do mesmo domínio / com CORS.");
+      setStatus("Falha ao exportar PNG. Imagens externas sem CORS foram ocultadas.", "error");
+      alert("Falha ao exportar PNG.\nDica: prefira avatar por upload (data URL) ou hospedar no mesmo domínio / com CORS.");
     }finally{
-      memo.forEach(([p, old]) => p.style.display = old ?? "");
+      undo();
     }
   }
 
-  // fatia o PNG longo em páginas A4 (várias PNGs)
-  async function exportPaged(el){
+  async function exportPaged(el, pixelRatio){
+    const undo = sanitizeForExport(el);
     const bg = getComputedStyle(document.body).backgroundColor || "#0d1320";
-    const scale = Math.max(2, Math.ceil(window.devicePixelRatio || 1));
-
-    // 1) renderiza UMA imagem alta
-    const dataUrl = await htmlToImage.toPng(el, {
-      backgroundColor: bg, pixelRatio: scale, cacheBust: true,
-      filter: (node) => {
-        if (node.tagName === "IMG") {
-          const src = node.getAttribute("src") || "";
-          if (!src.trim()) return false;
-          if (!sameOriginUrl(src)) return false;
-        }
-        return true;
+    try{
+      // imagem única alta
+      const dataUrl = await htmlToImage.toPng(el, { backgroundColor: bg, pixelRatio, cacheBust: true });
+      // fatiar em A4
+      const img = await new Promise((res, rej) => {
+        const im = new Image();
+        im.onload = () => res(im);
+        im.onerror = rej;
+        im.src = dataUrl;
+      });
+      const srcW = img.naturalWidth, srcH = img.naturalHeight;
+      const pageH = Math.floor(srcW * 1.41421356237);
+      let offset = 0, page = 1;
+      while (offset < srcH){
+        const sliceH = Math.min(pageH, srcH - offset);
+        const c = document.createElement("canvas");
+        c.width = srcW; c.height = sliceH;
+        c.getContext("2d").drawImage(img, 0, offset, srcW, sliceH, 0, 0, srcW, sliceH);
+        const url = c.toDataURL("image/png");
+        const a = document.createElement("a");
+        const stamp = new Date().toISOString().replace(/[:.]/g,"-");
+        a.href = url;
+        a.download = `ficha-A4-p${String(page).padStart(2,"0")}-${stamp}.png`;
+        a.click();
+        offset += sliceH; page += 1;
       }
-    });
-
-    // 2) carrega a imagem e fatia em razão A4
-    const img = await new Promise((res, rej) => {
-      const im = new Image();
-      im.onload = () => res(im);
-      im.onerror = rej;
-      im.src = dataUrl;
-    });
-
-    // largura/h de origem
-    const srcW = img.naturalWidth;
-    const srcH = img.naturalHeight;
-
-    // altura de página A4 em pixels mantendo a largura (A4 ~ 1.414)
-    const pageH = Math.floor(srcW * 1.41421356237);
-
-    let offset = 0, page = 1;
-    while (offset < srcH){
-      const sliceH = Math.min(pageH, srcH - offset);
-      const c = document.createElement("canvas");
-      c.width = srcW; c.height = sliceH;
-      const ctx = c.getContext("2d");
-      ctx.drawImage(img, 0, offset, srcW, sliceH, 0, 0, srcW, sliceH);
-      const url = c.toDataURL("image/png");
-      const a = document.createElement("a");
-      const stamp = new Date().toISOString().replace(/[:.]/g,"-");
-      a.href = url;
-      a.download = `ficha-A4-p${String(page).padStart(2,"0")}-${stamp}.png`;
-      a.click();
-      offset += sliceH;
-      page += 1;
+    }catch(err){
+      console.error("Falha ao exportar PNG (paged):", err);
+      setStatus("Falha ao exportar PNG paginado. Imagens externas sem CORS foram ocultadas.", "error");
+    }finally{
+      undo();
     }
   }
 
@@ -966,23 +1070,23 @@ window.setStatus = window.setStatus || function setStatus(msg, type="info"){
     const el = pickTarget();
     if (!el) return alert("Não achei a raiz da ficha.");
 
-    window.scrollTo(0,0); // garante topo
+    // pixel ratio: normal=2, Ctrl+Clique=1.5 (mais rápido)
+    const ratio = e.ctrlKey ? 1.5 : Math.max(2, Math.ceil(window.devicePixelRatio || 1));
+
+    window.scrollTo(0,0);
     enterExportMode();
-    // espera um frame pro layout aplicar as regras de export
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); // garante layout aplicado
 
     try{
-      if (e.shiftKey){
-        await exportPaged(el);       // Shift + clique => páginas A4
-      }else{
-        await exportSingle(el);      // Clique normal => PNG único
-      }
+      if (e.shiftKey) await exportPaged(el, ratio);
+      else await exportSingle(el, ratio);
     }finally{
       exitExportMode();
     }
   });
 })();
 </script>
+
 
 </body>
 </html>
