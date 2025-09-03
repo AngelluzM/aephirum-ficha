@@ -522,7 +522,6 @@ textarea{min-height:120px;width:100%;resize:vertical;}
 }
 
   #bl_midia .canvas{ min-height:220px; }
-  #bl_midia .placeholder{ display:none !important; } /* some no PDF quando a imagem existe */
 
 div#idl1, div#idl2 {
     display: grid; 
@@ -719,6 +718,11 @@ main .wrap {
     align-items: center !important;
     gap: 8px !important;
     justify-content: space-between !important;
+}
+
+#bl_midia .placeholder{ 
+	display:none !important; /* some no PDF quando a imagem existe */
+	
 }
 
 section#bl_comp.card div.card {
