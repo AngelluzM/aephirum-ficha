@@ -17,7 +17,6 @@
     </div>
     <div class="actions">
 	  <button class="btn btn-danger" onclick="resetForm()">Novo</button>
-	  <button id="btnSaveSheetPNG" class="btn primary" type="button" title="Salvar a ficha como PNG">Ficha (PNG)</button>
       <button class="btn" id="btnImport">Importar JSON</button>
       <button class="btn" id="btnExport">Exportar JSON</button>
       <button class="btn primary" onclick="window.print()">Imprimir / PDF</button>
@@ -141,11 +140,13 @@
   <!-- TOPO: Toggle + Ações -->
   <div class="midia-top">
     <div class="btn-group" role="group" aria-label="Origem da imagem">
-      <input type="radio" class="btn-check" name="midiaOption" id="optFile" checked>
-      <label class="btn btn-outline-primary" for="optFile">Arquivo</label>
+		<input type="radio" class="btn-check" name="midiaOption" id="optLink" checked>
+		<label class="btn btn-outline-primary" for="optLink">Link</label>
+	  
+		<input type="radio" class="btn-check" name="midiaOption" id="optFile">
+		<label class="btn btn-outline-primary" for="optFile">Arquivo</label>
 
-      <input type="radio" class="btn-check" name="midiaOption" id="optLink">
-      <label class="btn btn-outline-primary" for="optLink">Link</label>
+
     </div>
       <div class="midia-actions">
       <button type="button" id="btnCarregar" class="btn primary">Carregar</button>
@@ -875,9 +876,8 @@ document.addEventListener('input', e => {
 
 // Atualiza também no carregamento inicial
 document.addEventListener('DOMContentLoaded', atualizarTotalCompetencias);
-</script>
 
-<script>
+
 // COLOCA ZERO ENTODOS CAMPOS NUMERICOS VAZIOS
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('input[type="number"]').forEach(input => {
